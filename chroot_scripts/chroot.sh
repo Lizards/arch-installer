@@ -1,0 +1,141 @@
+#! /bin/bash -ex
+# shellcheck source=/dev/null
+
+
+function configure_localtime() {
+    local TIMEZONE=${1}
+    echo "Configuring localtime using ${TIMEZONE}..."
+
+    # timezone and time sync
+    ln -sf "/usr/share/zoneinfo/${TIMEZONE}" /etc/localtime
+    hwclock --systohc
+
+    # locale
+    locale-gen
+    echo "LANG=en_US.UTF-8" > /etc/locale.conf
+}
+
+
+function configure_hostname() {
+    local HOSTNAME=${1}
+    echo "${HOSTNAME}" > /etc/hostname
+    sed -i "8i 127.0.1.1\\t$HOSTNAME.localdomain\\t$HOSTNAME" /etc/hosts
+}
+
+
+function install_packages() {
+    local CHIPSET=${1}
+    local HOSTNAME=${2}
+    local INSTALL_SYSTEM_CONFIGS=${3}
+    local CHROOT_SCRIPT_DIR=${4}
+    local USER=${5}
+
+    # Install the list of packages first, rather than together with the AUR packages after aursync,
+    # as some may be dependencies for compiling the AUR packages
+    readarray -t packages < "${CHROOT_SCRIPT_DIR}/packages.txt"
+    # Install microcode package & stuff from packages.txt
+    sudo pacman -Syu --noconfirm "${CHIPSET}-ucode" "${packages[@]}"
+    # Special snowflake Sublime Text
+    curl -O https://download.sublimetext.com/sublimehq-pub.gpg && sudo pacman-key --add sublimehq-pub.gpg && sudo pacman-key --lsign-key 8A8F901A && rm sublimehq-pub.gpg
+    echo -e "\\n[sublime-text]\\nServer = https://download.sublimetext.com/arch/stable/x86_64" | sudo tee -a /etc/pacman.conf
+    sudo pacman -Syu --noconfirm sublime-text
+
+    # Install aurutils and configure local 'custom' database
+    bash "${CHROOT_SCRIPT_DIR}/aurutils.sh" "${USER}"
+
+    # Install AUR packages
+    grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/aur_packages.txt" | while IFS= read -r package
+    do
+        sudo -u "${USER}" aursync "${package}"
+        sudo pacman -Syu --noconfirm "${package}"
+    done
+
+    if [ "${INSTALL_SYSTEM_CONFIGS}" == "1" ]; then
+        # Install configs from `arch-system-config` repo (package named after hostname)
+        bash "${CHROOT_SCRIPT_DIR}/arch-system-config.sh" "${HOSTNAME}" "${USER}"
+    fi
+
+    # Add given user to groups provided by installed packages
+    grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/groups.txt" | while IFS= read -r group
+    do
+        usermod -aG "${group}" "${USER}"
+    done
+
+    # Enable systemd daemons
+    start_services "${USER}"
+}
+
+
+function start_services() {
+    local USER=${1}
+    # system services
+    grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/services.txt" | while IFS= read -r service
+    do
+        systemctl enable "${service}"
+    done
+    # user services
+    grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/user_services.txt" | while IFS= read -r service
+    do
+        systemctl --user enable "${service}"
+    done
+}
+
+
+function configure_bootloader() {
+    local ROOT_PART=${1}
+    local CHIPSET=${2}
+
+    # please note tabs in the here-doc to support indentation - https://unix.stackexchange.com/questions/76481/cant-indent-heredoc-to-match-nestings-indent
+    bootctl install
+    cat > /boot/loader/loader.conf <<- EOF
+		default Arch
+		timeout 5
+		editor  0
+	EOF
+
+    local PARTUUID
+    PARTUUID=$(blkid -s PARTUUID -o value "${ROOT_PART}")
+    cat > /boot/loader/entries/arch.conf <<- EOF
+		title   Arch
+		linux   /vmlinuz-linux
+		initrd  /${CHIPSET}-ucode.img
+		initrd  /initramfs-linux.img
+		options root=PARTUUID=${PARTUUID} rw ipv6.disable=1
+	EOF
+}
+
+
+setup_user() {
+    local USER=${1}
+    local PASS=${2}
+
+    # Set root password
+    echo "Set root password:"
+    passwd
+
+    # Allow wheel group to sudo
+    sed -i 's/# \(%wheel ALL=(ALL) ALL\)/\1/' /etc/sudoers
+
+    # Create user
+    echo "Creating user ${USER}"
+    useradd -m -G wheel,optical "${USER}"
+    echo "${USER}:${PASS}" | chpasswd
+}
+
+
+function main() {
+    local CHROOT_SCRIPT_DIR="${1:-/usr/local/lib/bootstrap}"
+    source "${CHROOT_SCRIPT_DIR}/.config"
+
+    configure_localtime "${TIMEZONE}"
+    configure_hostname "${HOSTNAME}"
+    configure_bootloader "${ROOT_PART}" "${CHIPSET}"
+    setup_user "${USER}" "${PASS}"
+    # install aurutils, set up local pacman database,
+    # install all packages, and install configs from `arch-system-config` repo,
+    # and start services
+    install_packages "${CHIPSET}" "${HOSTNAME}" "${INSTALL_SYSTEM_CONFIGS}" "${CHROOT_SCRIPT_DIR}" "${USER}"
+}
+
+
+main "$@"

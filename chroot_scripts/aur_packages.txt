@@ -1,0 +1,15 @@
+virtualbox-ext-oracle
+ttf-font-awesome-4
+ttf-ms-fonts
+ttf-symbola
+gtk-theme-solarc-git
+doctoc
+polybar
+geteltorito
+python36
+dropbox
+nautilus-dropbox
+chromium-widevine
+xdg-open-server
+kubernetes-bin
+kops-bin
