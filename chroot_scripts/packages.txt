@@ -31,7 +31,7 @@ bluez
 blueberry
 i3-wm
 i3lock
-dmenu
+rofi
 feh
 ranger
 rxvt-unicode
