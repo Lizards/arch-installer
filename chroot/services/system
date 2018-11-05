@@ -2,3 +2,4 @@ fstrim.timer
 ntpd.service
 wicd.service
 lxdm.service
+bluetooth.service

@@ -1,4 +1,4 @@
-# Arch Bootstrap Scripts
+# Arch Installation Scripts
 
 My personal scripts for bootstrapping an Arch Linux system.
 
@@ -15,9 +15,9 @@ $ curl -L https://github.com/Lizards/arch-installer/tarball/master | tar -xz --s
 ```console
 $ vim .config
 ```
-6. Run the bootstrap script:
+6. Run the install script:
 ```console
-$ bash -ex bootstrap.sh
+$ bash -ex install.sh
 ```
 7. Reboot, log in to i3, install [dotfiles](https://github.com/Lizards/dotfiles)
 

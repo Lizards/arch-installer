@@ -41,9 +41,9 @@ function setup_mirrorlist() {
 function run_chroot() {
     local CHROOT_SCRIPT_DIR=${1}
     mkdir -p "/mnt${CHROOT_SCRIPT_DIR}"
-    mv chroot_scripts/* "/mnt${CHROOT_SCRIPT_DIR}"
+    mv chroot/* "/mnt${CHROOT_SCRIPT_DIR}"
     cp .config "/mnt${CHROOT_SCRIPT_DIR}"
-    arch-chroot /mnt bash "${CHROOT_SCRIPT_DIR}/chroot.sh" "${CHROOT_SCRIPT_DIR}"
+    arch-chroot /mnt bash "${CHROOT_SCRIPT_DIR}/main.sh" "${CHROOT_SCRIPT_DIR}"
 }
 
 

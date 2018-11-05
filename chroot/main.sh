@@ -32,8 +32,8 @@ function install_packages() {
 
     # Install the list of packages first, rather than together with the AUR packages after aursync,
     # as some may be dependencies for compiling the AUR packages
-    readarray -t packages < "${CHROOT_SCRIPT_DIR}/packages.txt"
-    # Install microcode package & stuff from packages.txt
+    readarray -t packages < "${CHROOT_SCRIPT_DIR}/packages/arch"
+    # Install microcode package & stuff from packages/arch
     sudo pacman -Syu --noconfirm "${CHIPSET}-ucode" "${packages[@]}"
     # Special snowflake Sublime Text
     curl -O https://download.sublimetext.com/sublimehq-pub.gpg && sudo pacman-key --add sublimehq-pub.gpg && sudo pacman-key --lsign-key 8A8F901A && rm sublimehq-pub.gpg
@@ -44,7 +44,7 @@ function install_packages() {
     bash "${CHROOT_SCRIPT_DIR}/aurutils.sh" "${USER}"
 
     # Install AUR packages
-    grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/aur_packages.txt" | while IFS= read -r package
+    grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/packages/aur" | while IFS= read -r package
     do
         sudo -u "${USER}" aursync "${package}"
         sudo pacman -Syu --noconfirm "${package}"
@@ -56,7 +56,7 @@ function install_packages() {
     fi
 
     # Add given user to groups provided by installed packages
-    grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/groups.txt" | while IFS= read -r group
+    grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/packages/groups" | while IFS= read -r group
     do
         usermod -aG "${group}" "${USER}"
     done
@@ -69,12 +69,12 @@ function install_packages() {
 function start_services() {
     local USER=${1}
     # system services
-    grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/services.txt" | while IFS= read -r service
+    grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/services/system" | while IFS= read -r service
     do
         systemctl enable "${service}"
     done
     # user services
-    grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/user_services.txt" | while IFS= read -r service
+    grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/services/user" | while IFS= read -r service
     do
         systemctl --user enable "${service}"
     done
@@ -118,7 +118,7 @@ setup_user() {
 
     # Create user
     echo "Creating user ${USER}"
-    useradd -m -G wheel,optical "${USER}"
+    useradd -m -G wheel,optical,audio,video,lp "${USER}"
     echo "${USER}:${PASS}" | chpasswd
 }
 
