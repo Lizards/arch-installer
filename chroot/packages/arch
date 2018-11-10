@@ -4,6 +4,7 @@ sudo
 vim
 vifm
 git
+thefuck
 openssh
 openssl-1.0
 ntp
