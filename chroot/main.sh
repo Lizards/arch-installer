@@ -6,6 +6,9 @@ function configure_localtime() {
     local TIMEZONE=${1}
     echo "Configuring localtime using ${TIMEZONE}..."
 
+    # enable ntp sync
+    timedatectl set-ntp true
+
     # timezone and time sync
     ln -sf "/usr/share/zoneinfo/${TIMEZONE}" /etc/localtime
     hwclock --systohc
