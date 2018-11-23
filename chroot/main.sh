@@ -11,6 +11,7 @@ function configure_localtime() {
     hwclock --systohc
 
     # locale
+    sed -i 's/^#\(en_US\.UTF-8\)/\1/g' /etc/locale.gen
     locale-gen
     echo "LANG=en_US.UTF-8" > /etc/locale.conf
 }
