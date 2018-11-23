@@ -28,7 +28,7 @@ function install_packages() {
     local HOSTNAME=${2}
     local INSTALL_SYSTEM_CONFIGS=${3}
     local CHROOT_SCRIPT_DIR=${4}
-    local USER=${5}
+    local USERNAME=${5}
 
     # Install the list of packages first, rather than together with the AUR packages after aursync,
     # as some may be dependencies for compiling the AUR packages
@@ -41,32 +41,32 @@ function install_packages() {
     pacman -Syu --noconfirm sublime-text
 
     # Install aurutils and configure local 'custom' database
-    bash "${CHROOT_SCRIPT_DIR}/aurutils.sh" "${USER}"
+    bash "${CHROOT_SCRIPT_DIR}/aurutils.sh" "${USERNAME}"
 
     # Install AUR packages
     grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/packages/aur" | while IFS= read -r package
     do
-        sudo -u "${USER}" aursync --no-view --no-confirm "${package}"
+        sudo -u "${USERNAME}" aursync --no-view --no-confirm "${package}"
     done
 
     if [ "${INSTALL_SYSTEM_CONFIGS}" == "1" ]; then
         # Install dotfiles and configs from `arch-system-config` repo (package named after hostname)
-        bash "${CHROOT_SCRIPT_DIR}/arch-system-config.sh" "${HOSTNAME}" "${USER}"
+        bash "${CHROOT_SCRIPT_DIR}/arch-system-config.sh" "${HOSTNAME}" "${USERNAME}"
     fi
 
     # Add given user to groups provided by installed packages
     grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/packages/groups" | while IFS= read -r group
     do
-        usermod -aG "${group}" "${USER}"
+        usermod -aG "${group}" "${USERNAME}"
     done
 
     # Enable systemd daemons
-    start_services "${USER}"
+    start_services "${USERNAME}"
 }
 
 
 function start_services() {
-    local USER=${1}
+    local USERNAME=${1}
     # system services
     grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/services/system" | while IFS= read -r service
     do
@@ -75,7 +75,7 @@ function start_services() {
     # user services
     grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/services/user" | while IFS= read -r service
     do
-        systemctl --user enable "${service}"
+        sudo -u "${USERNAME}" systemctl --user enable "${service}"
     done
 }
 
@@ -105,7 +105,7 @@ function configure_bootloader() {
 
 
 setup_user() {
-    local USER=${1}
+    local USERNAME=${1}
     local PASS=${2}
 
     # Set root password
@@ -116,9 +116,9 @@ setup_user() {
     sed -i 's/# \(%wheel ALL=(ALL) ALL\)/\1/' /etc/sudoers
 
     # Create user
-    echo "Creating user ${USER}"
-    useradd -m -G wheel,optical,audio,video,lp "${USER}"
-    echo "${USER}:${PASS}" | chpasswd
+    echo "Creating user ${USERNAME}"
+    useradd -m -G wheel,optical,audio,video,lp "${USERNAME}"
+    echo "${USERNAME}:${PASS}" | chpasswd
 }
 
 
@@ -129,11 +129,11 @@ function main() {
     configure_localtime "${TIMEZONE}"
     configure_hostname "${HOSTNAME}"
     configure_bootloader "${ROOT_PART}" "${CHIPSET}"
-    setup_user "${USER}" "${PASS}"
+    setup_user "${USERNAME}" "${PASS}"
     # install aurutils, set up local pacman database,
     # install all packages, and install configs from `arch-system-config` repo,
     # and start services
-    install_packages "${CHIPSET}" "${HOSTNAME}" "${INSTALL_SYSTEM_CONFIGS}" "${CHROOT_SCRIPT_DIR}" "${USER}"
+    install_packages "${CHIPSET}" "${HOSTNAME}" "${INSTALL_SYSTEM_CONFIGS}" "${CHROOT_SCRIPT_DIR}" "${USERNAME}"
 }
 
 
