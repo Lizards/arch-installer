@@ -19,7 +19,7 @@ $ vim .config
 ```console
 $ bash -ex install.sh
 ```
-7. Reboot, log in to i3, install [dotfiles](https://github.com/Lizards/dotfiles)
+7. Reboot, log in to i3, *enjoy*
 
 # Credit
 

@@ -50,7 +50,7 @@ function install_packages() {
     done
 
     if [ "${INSTALL_SYSTEM_CONFIGS}" == "1" ]; then
-        # Install configs from `arch-system-config` repo (package named after hostname)
+        # Install dotfiles and configs from `arch-system-config` repo (package named after hostname)
         bash "${CHROOT_SCRIPT_DIR}/arch-system-config.sh" "${HOSTNAME}" "${USER}"
     fi
 
