@@ -24,8 +24,6 @@ function main() {
     sudo -u "${USER}" repo-add "${REPO_DB}"
     pacman -Syy
 
-    read -p "Hit enter"
-
     # run makepkg as user
     local AURUTILS_BUILD_DIR='/tmp/aurutils'
     sudo -u "${USER}" mkdir "${AURUTILS_BUILD_DIR}"
@@ -34,18 +32,13 @@ function main() {
     pushd "${AURUTILS_BUILD_DIR}"
         sudo -u "${USER}" git clone https://aur.archlinux.org/aurutils.git .
         sudo -u "${USER}" makepkg -s
-        read -p "Hit enter"
         local AURUTILS_PKG
         AURUTILS_PKG=$(ls aurutils*.pkg.tar.xz)
         sudo -u "${USER}" mv "${AURUTILS_PKG}" "${REPO_DIR}"
         sudo -u "${USER}" repo-add --new "${REPO_DB}" "${REPO_DIR}/${AURUTILS_PKG}"
     popd
 
-    read -p "Hit enter"
-
     pacman -Syu --noconfirm aurutils
-
-    read -p "Hit enter"
 }
 
 
