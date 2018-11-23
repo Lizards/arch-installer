@@ -16,6 +16,9 @@ function main() {
     pushd "${USER_HOME}"
         sudo -u "${USERNAME}" git clone --recurse-submodules -j8 https://github.com/Lizards/dotfiles
         pushd dotfiles
+            echo
+            echo "Installing dotfiles..."
+            git checkout "${HOSTNAME}" || echo "No branch matching hostname; using master"
             sudo -u "${USERNAME}" make
         popd
     popd
