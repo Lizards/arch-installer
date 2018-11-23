@@ -44,7 +44,6 @@ __Swap__
 
 ```
 mkswap /dev/sda2
-swapon /dev/sda2
 ```
 
 __/__
