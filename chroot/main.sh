@@ -48,6 +48,8 @@ function install_packages() {
     grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/packages/aur" | while IFS= read -r package
     do
         sudo -u "${USERNAME}" aursync --no-view --no-confirm "${package}"
+        # Packages compiled from source aren't automatically installed through aursync (this impacts Polybar)
+        if ! pacman -Qs "${package}" > /dev/null ; then pacman -S --noconfirm "${package}"; fi
     done
 
     if [ "${INSTALL_SYSTEM_CONFIGS}" == "1" ]; then
