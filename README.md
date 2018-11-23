@@ -5,7 +5,7 @@ My personal scripts for bootstrapping an Arch Linux system.
 # Usage
 
 1. Boot with Arch ISO: https://www.archlinux.org/download/
-2. Prepare the partitions: https://wiki.archlinux.org/index.php/Installation_guide#Partition_the_disks [(Here's what I do)](PARTITIONS.md)
+2. Prepare the partitions: https://wiki.archlinux.org/index.php/Installation_guide#Partition_the_disks ([Here's what I do](PARTITIONS.md))
 3. Make sure the internet is available.
 4. Download and extact the project:
 ```console
@@ -20,6 +20,10 @@ $ vim .config
 $ bash -ex install.sh
 ```
 7. Reboot, log in to i3, *enjoy*
+
+# VirtualBox
+
+A [separate branch](https://github.com/Lizards/arch-installer/tree/virtualbox) is maintained for VirtualBox, installing the guest libraries instead of host libraries.
 
 # Credit
 
