@@ -25,17 +25,15 @@ function configure_hostname() {
 
 
 function install_packages() {
-    local CHIPSET=${1}
-    local HOSTNAME=${2}
-    local INSTALL_SYSTEM_CONFIGS=${3}
-    local CHROOT_SCRIPT_DIR=${4}
-    local USERNAME=${5}
+    local HOSTNAME=${1}
+    local INSTALL_SYSTEM_CONFIGS=${2}
+    local CHROOT_SCRIPT_DIR=${3}
+    local USERNAME=${4}
 
     # Install the list of packages first, rather than together with the AUR packages after aursync,
     # as some may be dependencies for compiling the AUR packages
     readarray -t packages < "${CHROOT_SCRIPT_DIR}/packages/arch"
-    # Install microcode package & stuff from packages/arch
-    pacman -Syu --noconfirm "${CHIPSET}-ucode" "${packages[@]}"
+    pacman -Syu --noconfirm "${packages[@]}"
     # Special snowflake Sublime Text
     curl -O https://download.sublimetext.com/sublimehq-pub.gpg && pacman-key --add sublimehq-pub.gpg && pacman-key --lsign-key 8A8F901A && rm sublimehq-pub.gpg
     echo -e "\\n[sublime-text]\\nServer = https://download.sublimetext.com/arch/stable/x86_64" | tee -a /etc/pacman.conf
@@ -85,7 +83,13 @@ function start_services() {
 
 function configure_bootloader() {
     local ROOT_PART=${1}
-    local CHIPSET=${2}
+    declare -A CHIPSETS=(
+        [GenuineIntel]=intel
+        [AuthenticAMD]=amd
+    )
+    local CHIPSET=${CHIPSETS["$(lscpu | grep Vendor | awk -F ': +' '{print $2}')"]}
+
+    pacman -Syu --noconfirm "${CHIPSET}-ucode"
 
     # please note tabs in the here-doc to support indentation - https://unix.stackexchange.com/questions/76481/cant-indent-heredoc-to-match-nestings-indent
     bootctl install
@@ -131,12 +135,12 @@ function main() {
 
     configure_localtime "${TIMEZONE}"
     configure_hostname "${HOSTNAME}"
-    configure_bootloader "${ROOT_PART}" "${CHIPSET}"
+    configure_bootloader "${ROOT_PART}"
     setup_user "${USERNAME}" "${PASS}"
     # install aurutils, set up local pacman database,
     # install all packages, and install configs from `arch-system-config` repo,
     # and start services
-    install_packages "${CHIPSET}" "${HOSTNAME}" "${INSTALL_SYSTEM_CONFIGS}" "${CHROOT_SCRIPT_DIR}" "${USERNAME}"
+    install_packages "${HOSTNAME}" "${INSTALL_SYSTEM_CONFIGS}" "${CHROOT_SCRIPT_DIR}" "${USERNAME}"
 }
 
 
