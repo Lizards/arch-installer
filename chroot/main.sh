@@ -29,7 +29,7 @@ function configure_hostname() {
 
 function install_packages() {
     local HOSTNAME=${1}
-    local INSTALL_SYSTEM_CONFIGS=${2}
+    local INSTALL_DOTFILES=${2}
     local CHROOT_SCRIPT_DIR=${3}
     local USERNAME=${4}
     local VIRTUALBOX=${5}
@@ -62,9 +62,9 @@ function install_packages() {
         if ! pacman -Qs "${package}" > /dev/null ; then pacman -S --noconfirm "${package}"; fi
     done
 
-    if [ "${INSTALL_SYSTEM_CONFIGS}" == "1" ]; then
+    if [ "${INSTALL_DOTFILES}" == "1" ]; then
         # Install dotfiles and configs from `arch-system-config` repo (package named after hostname)
-        bash "${CHROOT_SCRIPT_DIR}/arch-system-config.sh" "${HOSTNAME}" "${USERNAME}" "${VIRTUALBOX}"
+        bash "${CHROOT_SCRIPT_DIR}/dotfiles.sh" "${HOSTNAME}" "${USERNAME}" "${VIRTUALBOX}"
     fi
 
     # Add given user to groups provided by installed packages
@@ -158,11 +158,14 @@ function main() {
     pause
     setup_user "${USERNAME}" "${PASS}" "${ROOT_PASS}"
     pause
-    # install aurutils, set up local pacman database,
-    # install all packages, start services,
-    # add user to groups provided by packages,
-    # install configs from `arch-system-config` repo, and install dotfiles from `dotfiles` repo
-    install_packages "${HOSTNAME}" "${INSTALL_SYSTEM_CONFIGS:-1}" "${CHROOT_SCRIPT_DIR}" "${USERNAME}" "${VIRTUALBOX}"
+    if [ "${INSTALL_PACKAGES:-1}" == "1" ]; then
+        # install aurutils, set up local pacman database,
+        # install all packages, start services,
+        # add user to groups provided by packages,
+        # install configs from `arch-system-config` repo, and install dotfiles from `dotfiles` repo
+        install_packages "${HOSTNAME}" "${INSTALL_DOTFILES:-1}" "${CHROOT_SCRIPT_DIR}" "${USERNAME}" "${VIRTUALBOX}"
+        pause
+    fi
 }
 
 
