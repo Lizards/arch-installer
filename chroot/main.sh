@@ -32,6 +32,15 @@ function install_packages() {
     local INSTALL_SYSTEM_CONFIGS=${2}
     local CHROOT_SCRIPT_DIR=${3}
     local USERNAME=${4}
+    local VIRTUALBOX=${5}
+
+    if [ "${VIRTUALBOX}" == "1" ]; then
+        echo
+        echo "VirtualBox detected"
+        echo "virtualbox-guest-utils" >> packages/arch
+        echo "virtualbox-guest-modules-arch" >> packages/arch
+        echo "vboxservice.service" >> services/system
+    fi
 
     # Install the list of packages first, rather than together with the AUR packages after aursync,
     # as some may be dependencies for compiling the AUR packages
@@ -55,7 +64,7 @@ function install_packages() {
 
     if [ "${INSTALL_SYSTEM_CONFIGS}" == "1" ]; then
         # Install dotfiles and configs from `arch-system-config` repo (package named after hostname)
-        bash "${CHROOT_SCRIPT_DIR}/arch-system-config.sh" "${HOSTNAME}" "${USERNAME}"
+        bash "${CHROOT_SCRIPT_DIR}/arch-system-config.sh" "${HOSTNAME}" "${USERNAME}" "${VIRTUALBOX}"
     fi
 
     # Add given user to groups provided by installed packages
@@ -117,10 +126,11 @@ function configure_bootloader() {
 setup_user() {
     local USERNAME=${1}
     local PASS=${2}
+    local ROOT_PASS=${3}
 
     # Set root password
-    echo "Set root password:"
-    passwd
+    echo "Setting root password"
+    usermod --password "${ROOT_PASS}" root
 
     # Allow wheel group to sudo
     sed -i 's/# \(%wheel ALL=(ALL) ALL\)/\1/' /etc/sudoers
@@ -134,16 +144,25 @@ setup_user() {
 
 function main() {
     local CHROOT_SCRIPT_DIR="${1:-/usr/local/lib/bootstrap}"
-    source "${CHROOT_SCRIPT_DIR}/.config"
+    ! grep -q "innotek GmbH" /sys/class/dmi/id/sys_vendor
+    local VIRTUALBOX=$?
 
-    configure_localtime "${TIMEZONE}"
+    source "${CHROOT_SCRIPT_DIR}/.config"
+    source pause.sh
+
+    configure_localtime "${TIMEZONE:-US/Eastern}"
+    pause
     configure_hostname "${HOSTNAME}"
+    pause
     configure_bootloader "${ROOT_PART}"
-    setup_user "${USERNAME}" "${PASS}"
+    pause
+    setup_user "${USERNAME}" "${PASS}" "${ROOT_PASS}"
+    pause
     # install aurutils, set up local pacman database,
-    # install all packages, and install configs from `arch-system-config` repo,
-    # and start services
-    install_packages "${HOSTNAME}" "${INSTALL_SYSTEM_CONFIGS}" "${CHROOT_SCRIPT_DIR}" "${USERNAME}"
+    # install all packages, start services,
+    # add user to groups provided by packages,
+    # install configs from `arch-system-config` repo, and install dotfiles from `dotfiles` repo
+    install_packages "${HOSTNAME}" "${INSTALL_SYSTEM_CONFIGS:-1}" "${CHROOT_SCRIPT_DIR}" "${USERNAME}" "${VIRTUALBOX}"
 }
 
 

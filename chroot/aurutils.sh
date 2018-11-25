@@ -18,7 +18,7 @@ function main() {
 		SigLevel = Optional TrustAll
 		Server = file:///var/cache/pacman/custom
 	EOF
-    echo "Include = /etc/pacman.d/custom" | tee -a /etc/pacman.conf
+    echo 'Include = /etc/pacman.d/custom' | tee -a /etc/pacman.conf
     sed -i 's/#Color/Color/' /etc/pacman.conf
     install -d "${REPO_DIR}" -o "${USERNAME}"
     sudo -u "${USERNAME}" repo-add "${REPO_DB}"
