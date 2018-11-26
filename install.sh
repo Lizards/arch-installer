@@ -48,7 +48,7 @@ function run_chroot() {
 
     arch-chroot /mnt bash "${CHROOT_SCRIPT_DIR}/main.sh" "${CHROOT_SCRIPT_DIR}"
 
-    rm -rf "/mnt${CHROOT_SCRIPT_DIR}"
+    rm -rf "/mnt${CHROOT_SCRIPT_DIR:?}"
 }
 
 

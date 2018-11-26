@@ -5,7 +5,8 @@ function main() {
     local HOSTNAME=${1}
     local USERNAME=${2}
     local VIRTUALBOX=${3}
-    local USER_HOME="$(getent passwd "${USERNAME}" | cut -d: -f6)"
+    local USER_HOME
+    USER_HOME="$(getent passwd "${USERNAME}" | cut -d: -f6)"
 
     sudo -u "${USERNAME}" mkdir /tmp/arch-system-config
     pushd /tmp/arch-system-config
