@@ -6,6 +6,9 @@ function main() {
     local REPO_DB="${REPO_DIR}/custom.db.tar"
     local USERNAME=${1}
 
+    # Install optional dependencies
+    pacman -Syu --noconfirm --needed vifm aria2 parallel expac
+
     # pacman local repo and aurutils
     # please note tabs in the here-doc to support indentation - https://unix.stackexchange.com/questions/76481/cant-indent-heredoc-to-match-nestings-indent
     cat > /etc/pacman.d/custom <<- EOF

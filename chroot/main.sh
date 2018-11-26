@@ -34,32 +34,21 @@ function install_packages() {
     local USERNAME=${4}
     local VIRTUALBOX=${5}
 
-    if [ "${VIRTUALBOX}" == "1" ]; then
-        echo
-        echo "VirtualBox detected"
-        echo "virtualbox-guest-utils" >> packages/arch
-        echo "virtualbox-guest-modules-arch" >> packages/arch
-        echo "vboxservice.service" >> services/system
-    fi
-
     # Install the list of packages first, rather than together with the AUR packages after aursync,
     # as some may be dependencies for compiling the AUR packages
     readarray -t packages < "${CHROOT_SCRIPT_DIR}/packages/arch"
-    pacman -Syu --noconfirm "${packages[@]}"
+    pacman -Syu --noconfirm --needed "${packages[@]}"
     # Special snowflake Sublime Text
     curl -O https://download.sublimetext.com/sublimehq-pub.gpg && pacman-key --add sublimehq-pub.gpg && pacman-key --lsign-key 8A8F901A && rm sublimehq-pub.gpg
     echo -e "\\n[sublime-text]\\nServer = https://download.sublimetext.com/arch/stable/x86_64" | tee -a /etc/pacman.conf
     pacman -Syu --noconfirm sublime-text
-
-    # Install aurutils and configure local 'custom' database
-    bash "${CHROOT_SCRIPT_DIR}/aurutils.sh" "${USERNAME}"
 
     # Install AUR packages
     grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/packages/aur" | while IFS= read -r package
     do
         sudo -u "${USERNAME}" aursync --no-view --no-confirm "${package}"
         # Packages compiled from source aren't automatically installed through aursync (this impacts Polybar)
-        if ! pacman -Qs "${package}" > /dev/null ; then pacman -S --noconfirm "${package}"; fi
+        if ! pacman -Qs "${package}" > /dev/null ; then pacman -Syu --noconfirm "${package}"; fi
     done
 
     if [ "${INSTALL_DOTFILES}" == "1" ]; then
@@ -75,6 +64,14 @@ function install_packages() {
 
     # Enable systemd daemons
     start_services "${USERNAME}"
+}
+
+
+function configure_virtualbox_guest() {
+    echo
+    echo "VirtualBox detected"
+    pacman -Syu --noconfirm virtualbox-guest-utils virtualbox-guest-modules-arch
+    systemctl enable vboxservice.service
 }
 
 
@@ -126,7 +123,8 @@ function configure_bootloader() {
 setup_user() {
     local USERNAME=${1}
     local PASS=${2}
-    local ROOT_PASS=${3}
+    local USER_GROUPS=${3}
+    local ROOT_PASS=${4}
 
     # Set root password
     echo "Setting root password"
@@ -137,7 +135,7 @@ setup_user() {
 
     # Create user
     echo "Creating user ${USERNAME}"
-    useradd -m -G wheel,optical,audio,video,lp "${USERNAME}"
+    useradd -m -G "${USER_GROUPS}" "${USERNAME}"
     echo "${USERNAME}:${PASS}" | chpasswd
 }
 
@@ -150,14 +148,29 @@ function main() {
     source "${CHROOT_SCRIPT_DIR}/.config"
     source pause.sh
 
+    # https://wiki.archlinux.org/index.php/installation_guide#Time_zone
     configure_localtime "${TIMEZONE:-US/Eastern}"
     pause
+
+    # https://wiki.archlinux.org/index.php/installation_guide#Network_configuration
     configure_hostname "${HOSTNAME}"
     pause
+
+    # https://wiki.archlinux.org/index.php/Systemd-boot
     configure_bootloader "${ROOT_PART}"
     pause
-    setup_user "${USERNAME}" "${PASS}" "${ROOT_PASS}"
+
+    setup_user "${USERNAME}" "${PASS}" "${USER_GROUPS:-wheel,optical,audio,video,lp}" "${ROOT_PASS}"
     pause
+
+    # Install aurutils and configure local 'custom' database
+    bash "${CHROOT_SCRIPT_DIR}/aurutils.sh" "${USERNAME}"
+
+    if [ "${VIRTUALBOX}" == "1" ]; then
+        # Install vbox guest packages regardless of `INSTALL_PACKAGES` setting
+        configure_virtualbox_guest
+        pause
+    fi
     if [ "${INSTALL_PACKAGES:-1}" == "1" ]; then
         # install aurutils, set up local pacman database,
         # install all packages, start services,

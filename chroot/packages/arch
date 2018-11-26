@@ -20,6 +20,9 @@ wget
 curl
 powertop
 jq
+aria2
+parallel
+expac
 dnsutils
 xsel
 tree
