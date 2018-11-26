@@ -165,6 +165,7 @@ function main() {
 
     # Install aurutils and configure local 'custom' database
     bash "${CHROOT_SCRIPT_DIR}/aurutils.sh" "${USERNAME}"
+    pause
 
     if [ "${VIRTUALBOX}" == "1" ]; then
         # Install vbox guest packages regardless of `INSTALL_PACKAGES` setting
