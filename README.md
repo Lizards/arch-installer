@@ -72,11 +72,6 @@ Personal scripts for bootstrapping an Arch Linux system with i3.
 
 - __If network status is missing from Polybar__, update the `eth` and `wlan` modules in `$HOME/dotfiles/.config/polybar/config` with the correct interface names.  This can be done with `POLYBAR_ETH_INTERFACE` and `POLYBAR_WLAN_INTERFACE` environment variables (look in `.xprofile`).
 
-- __Opening a terminal will show the error__ `bash: /home/user/.private_aliases: No such file or directory`.  `$HOME/.bash_aliases` sources this file.  `make` in the dotfiles project expects this file to be in `$HOME/Dropbox` and creates a symlink to it, if found.  To fix it...
-	- Configure Dropbox (it is already installed), create the file in there, then run `make` in `$HOME/dotfiles` to create a symlink to the Dropbox file, __or__,
-	- Create this file in the home directory, __or__,
-	- Delete the line from `$HOME/.bash_aliases`
-
 - __If using a Mac__, i3 keyboard controls probably won't work as configured, which means you can't do *anything* in i3. You must drop to a shell (`Fn+Ctrl+Opt+F2`?) to do anything further. Edit `$HOME/.config/i3/config`, adding the line `bindsym Shift+Return exec i3-sensible-terminal` to temporarily enable `Shift+Enter` to open a terminal in i3, reboot, and...
 	- Use `i3-config-wizard` to generate a new config, then replace the key bindings in the existing config with the newly generated ones, __or__
     - Bind some other key to `Mod4`:
