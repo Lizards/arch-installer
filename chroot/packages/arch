@@ -52,7 +52,7 @@ bc
 dunst
 udiskie
 maim
-lxdm
+lxdm-gtk3
 alsa-lib
 alsa-utils
 jsoncpp
