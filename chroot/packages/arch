@@ -1,6 +1,7 @@
 pacman-contrib
 pacutils
-sudo
+base-devel
+reflector
 vim
 vifm
 git
