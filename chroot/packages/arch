@@ -34,6 +34,7 @@ docker
 bluez
 bluez-utils
 blueberry
+archey3
 i3-wm
 i3lock
 rofi
