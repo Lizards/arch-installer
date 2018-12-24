@@ -17,6 +17,7 @@ python-virtualenv
 python2
 mysql-python
 libmemcached
+lsof
 wget
 curl
 powertop
