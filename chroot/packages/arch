@@ -18,6 +18,7 @@ python2
 mysql-python
 libmemcached
 lsof
+strace
 wget
 curl
 powertop
