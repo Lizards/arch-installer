@@ -52,7 +52,7 @@ Personal scripts for bootstrapping an Arch Linux system with i3.
     $ ./install.sh
     ```
 
-	You will be prompted at least once for the user password.  This happens during the installation of AUR packages, as `aursync` is run as the user to build the packages, then the user must authenticate to install them.
+	You will be prompted at least once for the user password.  This happens during the installation of AUR packages, as `aur sync` is run as the user to build the packages, then the user must authenticate to install them.
 
 1. System will reboot upon successful installation.  You should be greeted with an LXDM login screen.  Select `i3` under `Desktop` in the bottom left corner before logging in for the first time.
 

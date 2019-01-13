@@ -46,8 +46,8 @@ function install_packages() {
     # Install AUR packages
     grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/packages/aur" | while IFS= read -r package
     do
-        sudo -u "${USERNAME}" aursync --no-view --no-confirm "${package}"
-        # Packages compiled from source aren't automatically installed through aursync (this impacts Polybar)
+        sudo -u "${USERNAME}" aur sync --no-view --no-confirm "${package}"
+        # Packages compiled from source aren't automatically installed through `aur sync` (this impacts Polybar)
         if ! pacman -Qs "${package}" > /dev/null ; then pacman -Syu --noconfirm "${package}"; fi
     done
 
@@ -72,7 +72,7 @@ function install_bluetooth() {
     sudo -u "${USERNAME}" mkdir /tmp/arch-bluetooth-pulseaudio
     pushd /tmp/arch-bluetooth-pulseaudio
         sudo -u "${USERNAME}" curl -L https://github.com/Lizards/arch-bluetooth-pulseaudio/tarball/master | tar -xvz --strip-component=1
-        sudo -u "${USERNAME}" aurbuild -d custom
+        sudo -u "${USERNAME}" aur build -d custom
         pacman -Syu --noconfirm arch-bluetooth-pulseaudio
     popd
 }

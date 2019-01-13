@@ -11,7 +11,7 @@ function main() {
     sudo -u "${USERNAME}" mkdir /tmp/arch-system-config
     pushd /tmp/arch-system-config
         sudo -u "${USERNAME}" curl -L https://github.com/Lizards/arch-system-config/tarball/master | tar -xvz --strip-component=1
-        sudo -u "${USERNAME}" aurbuild -d custom
+        sudo -u "${USERNAME}" aur build -d custom
         # Try to install system-specific config based on hostname, falling back to the shared base-config package only
         pacman -Syu --noconfirm "${HOSTNAME}-config" || pacman -Syu --noconfirm base-config
     popd
