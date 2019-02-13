@@ -12,6 +12,7 @@ chromium-widevine
 xdg-open-server
 virtualbox-ext-oracle
 python36
+aws-iam-authenticator-bin
 kubernetes-bin
 kops-bin
 polybar
