@@ -29,9 +29,6 @@ bash-completion
 smbclient
 gvfs-smb
 docker
-bluez
-bluez-utils
-blueberry
 archey3
 i3-wm
 i3lock
@@ -59,7 +56,6 @@ jsoncpp
 wireless_tools
 pulseaudio
 pulseaudio-alsa
-pulseaudio-bluetooth
 pavucontrol
 nodejs
 npm
