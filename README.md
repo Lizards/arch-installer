@@ -8,6 +8,7 @@ Personal scripts for bootstrapping an Arch Linux system with i3.
 - Installs [`aurutils`](https://github.com/AladW/aurutils) and configures a local pacman repository
 - Optionally, installs packages listed in [`chroot/packages`](chroot/packages)
 - Optionally, enables services listed in [`chroot/services`](chroot/services)
+- Optionally, installs the long-term support kernel
 - Detects CPU manufacturer and installs microcode package
 - Detects a VirtualBox environment, installs the guest libraries and enables `vboxservice.service`
 - Optionally, installs my [dotfiles](https://github.com/Lizards/dotfiles) (e.g. `.Xresources`, i3 config, bash aliases) and [system-specific configuration files](https://github.com/Lizards/arch-system-config) (e.g. mouse/trackpad settings, pacman hooks, bluetooth audio config)
@@ -42,6 +43,7 @@ Personal scripts for bootstrapping an Arch Linux system with i3.
     | `INSTALL_PACKAGES`       | Default: `1`<br/><br/>With `1`, install the packages in [`chroot/packages/arch`](chroot/packages/arch) and [`chroot/packages/aur`](chroot/packages/aur), enable the services in [`chroot/services/system`](chroot/services/system) and [`chroot/services/user`](chroot/services/user), and add the `USERNAME` user to the groups in [`chroot/packages/groups`](chroot/packages/groups).  Edit these files and opt out of installing the dotfiles to install an alternative Desktop Environment.                  |                |
     | `INSTALL_DOTFILES`       | Default: `1`<br/><br/>With `1`, install [system configs](https://github.com/Lizards/arch-system-config) and [dotfiles](https://github.com/Lizards/dotfiles).  See `HOSTNAME` below. Set to `0` to disable.  Dotfiles will not be installed with `INSTALL_PACKAGES=0`.                             |                |
     | `INSTALL_BLUETOOTH`      | Default: `1`<br/><br/>With `1`, install and configure [Bluetooth for PulseAudio](https://github.com/Lizards/arch-bluetooth-pulseaudio)                                                                                                          |                |
+    | `INSTALL_LTS_KERNEL`     | Default: `0`<br/><br/>With `1`, install the long-term support kernel and make its bootloader entry the default                             |                |
     | `TIMEZONE`               | Default: `US/Eastern`                                                                                                                                                                                                                       |                |
     | `COUNTRY`                | Default: `United States`<br/><br/>Used with `reflector` to generate pacman mirror list                                                                                                                                                             |                |
     | `PAUSE_BETWEEN_STEPS`    | For debugging, set to `1` to pause and wait for keyboard input between steps                                                                                                                                                                      |                |

@@ -101,36 +101,6 @@ function start_services() {
 }
 
 
-function configure_bootloader() {
-    local ROOT_PART=${1}
-    declare -A CHIPSETS=(
-        [GenuineIntel]=intel
-        [AuthenticAMD]=amd
-    )
-    local CHIPSET=${CHIPSETS["$(lscpu | grep Vendor | awk -F ': +' '{print $2}')"]}
-
-    pacman -Syu --noconfirm "${CHIPSET}-ucode"
-
-    # please note tabs in the here-doc to support indentation - https://unix.stackexchange.com/questions/76481/cant-indent-heredoc-to-match-nestings-indent
-    bootctl install
-    cat > /boot/loader/loader.conf <<- EOF
-		default Arch
-		timeout 5
-		editor  0
-	EOF
-
-    local PARTUUID
-    PARTUUID=$(blkid -s PARTUUID -o value "${ROOT_PART}")
-    cat > /boot/loader/entries/arch.conf <<- EOF
-		title   Arch
-		linux   /vmlinuz-linux
-		initrd  /${CHIPSET}-ucode.img
-		initrd  /initramfs-linux.img
-		options root=PARTUUID=${PARTUUID} rw ipv6.disable=1
-	EOF
-}
-
-
 setup_user() {
     local USERNAME=${1}
     local PASS=${2}
@@ -168,7 +138,7 @@ function main() {
     pause
 
     # https://wiki.archlinux.org/index.php/Systemd-boot
-    configure_bootloader "${ROOT_PART}"
+    bash "${CHROOT_SCRIPT_DIR}/bootloader.sh" "${ROOT_PART}" "${INSTALL_LTS_KERNEL:-0}"
     pause
 
     setup_user "${USERNAME}" "${PASS}" "${USER_GROUPS:-wheel,optical,audio,video,lp}" "${ROOT_PASS}"
