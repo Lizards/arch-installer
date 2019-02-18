@@ -72,7 +72,7 @@ function install_bluetooth() {
     sudo -u "${USERNAME}" mkdir /tmp/arch-bluetooth-pulseaudio
     pushd /tmp/arch-bluetooth-pulseaudio
         sudo -u "${USERNAME}" curl -L https://github.com/Lizards/arch-bluetooth-pulseaudio/tarball/master | tar -xvz --strip-component=1
-        sudo -u "${USERNAME}" aur build -d custom
+        sudo -u "${USERNAME}" aur build -d custom -- --clean --syncdeps --noconfirm --needed
         pacman -Syu --noconfirm arch-bluetooth-pulseaudio
     popd
 }
