@@ -3,7 +3,6 @@ pacutils
 base-devel
 reflector
 vim
-vifm
 git
 thefuck
 openssh
@@ -23,9 +22,6 @@ wget
 curl
 powertop
 jq
-aria2
-parallel
-expac
 dnsutils
 xsel
 tree

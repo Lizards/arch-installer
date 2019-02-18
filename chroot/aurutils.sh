@@ -6,8 +6,8 @@ function main() {
     local REPO_DB="${REPO_DIR}/custom.db.tar"
     local USERNAME=${1}
 
-    # Install dependencies
-    pacman -Syu --noconfirm --needed git jq pacutils vifm aria2 parallel expac
+    # Install git and optional dependencies
+    pacman -Syu --noconfirm --needed git bash-completion vifm
 
     # pacman local repo and aurutils
     # please note tabs in the here-doc to support indentation - https://unix.stackexchange.com/questions/76481/cant-indent-heredoc-to-match-nestings-indent
@@ -34,7 +34,7 @@ function main() {
 
     pushd "${AURUTILS_BUILD_DIR}"
         sudo -u "${USERNAME}" git clone https://aur.archlinux.org/aurutils.git .
-        sudo -u "${USERNAME}" makepkg -s
+        sudo -u "${USERNAME}" makepkg --syncdeps --noconfirm --needed
         local AURUTILS_PKG
         AURUTILS_PKG=$(ls aurutils*.pkg.tar.xz)
         sudo -u "${USERNAME}" mv "${AURUTILS_PKG}" "${REPO_DIR}"
