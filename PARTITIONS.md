@@ -14,9 +14,11 @@ __Verify internets:__ `ping google.com`
 
 __Create the partitions__
 
+`lsblk` to list devices
+
 `gdisk`
 
-- Type `/dev/sda` or whatever
+- Enter device, e.g. `/dev/sda`
 - __Create EFI system partition (`/boot`) - GPT mode__
 	- `n` for new partition
 	- Enter (partition 1)
@@ -32,7 +34,8 @@ __Create the partitions__
 - __Create `/`__
 	- `n` for new
 	- Enter, Enter, Enter, Enter
-	- `w` to save and exit
+- __Save__
+	- `w` to write partition table and exit
 
 __Format the partitions__
 
