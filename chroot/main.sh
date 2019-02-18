@@ -152,12 +152,12 @@ setup_user() {
 
 
 function main() {
-    local CHROOT_SCRIPT_DIR="${1:-/usr/local/lib/bootstrap}"
+    export CHROOT_SCRIPT_DIR="${1:-/usr/local/lib/bootstrap}"
     ! grep -q "innotek GmbH" /sys/class/dmi/id/sys_vendor
     local VIRTUALBOX=$?
 
     source "${CHROOT_SCRIPT_DIR}/.config"
-    source pause.sh
+    source "${CHROOT_SCRIPT_DIR}/pause.sh"
 
     # https://wiki.archlinux.org/index.php/installation_guide#Time_zone
     configure_localtime "${TIMEZONE:-US/Eastern}"
