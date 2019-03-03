@@ -52,6 +52,29 @@ function run_chroot() {
 }
 
 
+configure_wlan() {
+    # Assumes WPA, one wireless interface, and one ethernet interface.
+    # Set `WLAN_INTERFACE` and `ETH_INTERFACE` in .config if this doesn't work.
+    local WLAN_SSID=${1}
+    local WLAN_PASS=${2}
+    local WLAN_INTERFACE=${3}
+    local ETH_INTERFACE=${4}
+
+    if [ "${WLAN_INTERFACE}" == "0" ]; then
+        WLAN_INTERFACE=$(iw dev | awk '$1=="Interface"{print $2}')
+    fi
+    if [ "${ETH_INTERFACE}" == "0" ]; then
+        ETH_INTERFACE=$(ifconfig | grep UP,BROADCAST | cut -f 1 -d :)
+    fi
+
+    systemctl stop dhcpcd@"${ETH_INTERFACE}"
+    wpa_passphrase "${WLAN_SSID}" "${WLAN_PASS}" > wpa_supplicant.conf
+    wpa_supplicant -B -i "${WLAN_INTERFACE}" -c wpa_supplicant.conf
+    ip link set "${WLAN_INTERFACE}" up
+    dhcpcd "${WLAN_INTERFACE}"
+}
+
+
 function cleanup() {
     umount -R /mnt
     reboot
@@ -63,6 +86,16 @@ function main() {
     source pause.sh
 
     setfont sun12x22
+
+    if [ "${WLAN_INSTALL:-0}" == "1" ]; then
+        if [ -z "${WLAN_SSID}" ] || [ -z "${WLAN_PASS}" ]; then
+            # shellcheck disable=SC2016
+            echo 'ERROR: Configure variables `WLAN_SSID` and `WLAN_PASS` to install over wifi'
+            exit 1
+        fi
+        configure_wlan "${WLAN_SSID}" "${WLAN_PASS}" "${WLAN_INTERFACE:-0}" "${ETH_INTERFACE:-0}"
+        pause
+    fi
 
     setup_partitions "${BOOT_PART}" "${ROOT_PART}" "${SWAP_PART}" "${HOME_PART}"
     pause
