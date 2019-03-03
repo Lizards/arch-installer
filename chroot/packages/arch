@@ -32,6 +32,8 @@ docker
 archey3
 i3-wm
 i3lock
+thunar
+thunar-volman
 rofi
 feh
 ranger
