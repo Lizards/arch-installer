@@ -43,6 +43,11 @@ function install_packages() {
     echo -e "\\n[sublime-text]\\nServer = https://download.sublimetext.com/arch/stable/x86_64" | tee -a /etc/pacman.conf
     pacman -Syu --noconfirm sublime-text
 
+    # Import GPG keys for AUR packages
+    grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/packages/gpg-keys" | while IFS= read -r key
+    do
+        sudo -u "${USERNAME}" gpg --recv-keys "${key}"
+    done
     # Install AUR packages
     grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/packages/aur" | while IFS= read -r package
     do
