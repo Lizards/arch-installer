@@ -2,4 +2,4 @@ systemd-timesyncd.service
 fstrim.timer
 wicd.service
 lxdm.service
-bluetooth.service
+docker.service
