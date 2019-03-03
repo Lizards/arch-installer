@@ -138,6 +138,7 @@ function main() {
     pause
 
     # https://wiki.archlinux.org/index.php/Systemd-boot
+    # shellcheck disable=SC2153
     bash "${CHROOT_SCRIPT_DIR}/bootloader.sh" "${ROOT_PART}" "${INSTALL_LTS_KERNEL:-0}"
     pause
 

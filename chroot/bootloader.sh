@@ -1,4 +1,5 @@
 #!/bin/bash -e
+# shellcheck source=/dev/null
 
 
 function generate_bootloader_entry {
