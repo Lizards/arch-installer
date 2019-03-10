@@ -16,3 +16,4 @@ aws-iam-authenticator-bin
 kubernetes-bin
 kops-bin
 polybar
+signal-desktop-bin
