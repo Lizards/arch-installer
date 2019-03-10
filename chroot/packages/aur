@@ -14,6 +14,7 @@ virtualbox-ext-oracle
 python36
 aws-iam-authenticator-bin
 kubernetes-bin
+kubernetes-helm-bin
 kops-bin
 polybar
 signal-desktop-bin
