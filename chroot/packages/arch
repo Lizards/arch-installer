@@ -14,6 +14,8 @@ wicd-gtk
 python-pip
 python-virtualenv
 python2
+ipython
+ipython2
 mysql-python
 libmemcached
 lsof
