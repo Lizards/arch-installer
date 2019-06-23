@@ -39,6 +39,9 @@ function install_packages() {
     readarray -t packages < "${CHROOT_SCRIPT_DIR}/packages/arch"
     pacman -Syu --noconfirm --needed "${packages[@]}"
 
+    # Jupyter Notebook: https://wiki.archlinux.org/index.php/Jupyter#Installation
+    jupyter nbextension enable --py --sys-prefix widgetsnbextension || true
+
     # Import GPG keys for AUR packages
     grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/packages/gpg-keys" | while IFS= read -r key
     do

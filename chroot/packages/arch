@@ -75,6 +75,7 @@ chromium
 youtube-dl
 openvpn
 code
+jupyter-notebook
 trash-cli
 virtualbox
 virtualbox-host-modules-arch
