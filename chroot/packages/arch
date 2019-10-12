@@ -22,6 +22,7 @@ lsof
 strace
 wget
 curl
+netcat
 powertop
 jq
 dnsutils
