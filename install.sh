@@ -102,7 +102,7 @@ function main() {
     setup_mirrorlist "${COUNTRY:-United States}"
     pause
 
-    pacstrap /mnt base base-devel
+    pacstrap /mnt base base-devel linux linux-firmware
     pause
 
     echo "Generating /etc/fstab..."

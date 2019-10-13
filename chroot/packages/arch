@@ -1,6 +1,15 @@
+base
+base-devel
+jfsutils
+logrotate
+lvm2
+man-db
+man-pages
+netctl
+sysfsutils
+usbutils
 pacman-contrib
 pacutils
-base-devel
 reflector
 vim
 git
@@ -9,7 +18,6 @@ openssh
 openssl-1.0
 zip
 p7zip
-gzip
 wicd-gtk
 python-pip
 python-virtualenv
