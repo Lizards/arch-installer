@@ -12,6 +12,7 @@ pacman-contrib
 pacutils
 reflector
 vim
+hexedit
 git
 thefuck
 openssh
