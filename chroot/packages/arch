@@ -55,6 +55,7 @@ xorg-xprop
 xorg-xrandr
 xorg-xrdb
 xorg-xauth
+xorg-xfontsel
 xdg-utils
 arandr
 bc
