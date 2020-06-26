@@ -22,6 +22,8 @@ p7zip
 wicd-gtk
 python-pip
 python-virtualenv
+python-isort
+python-black
 python2
 ipython
 ipython2
