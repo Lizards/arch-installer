@@ -66,7 +66,7 @@ Personal scripts for bootstrapping an Arch Linux system with i3.
 
 ## Wait, not done yet
 
-- __Networking requires setup__: `wicd` service should be running, but network connectivity will not work without first running `wicd-client` to configure the interface(s).  Use `ip link` to list them.
+- __Networking requires setup__: `NetworkManager` service should be running, but network connectivity will not work without configuration.  Use `ip link` to list interfaces.
 
 - __If screen resolution is wrong__, use `arandr` to change it.  Export an `xrandr` command from `arandr`.  If dotfiles were installed, update `$HOME/dotfiles/bin/xrandr.local` with it, then run `make` in `$HOME/dotfiles` to fix permanently.  If not, put it in the i3 config as an `exec_always` command.
 

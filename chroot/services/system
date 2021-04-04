@@ -1,5 +1,5 @@
 systemd-timesyncd.service
 fstrim.timer
-wicd.service
+NetworkManager.service
 lxdm.service
 docker.service

@@ -19,7 +19,7 @@ openssh
 openssl-1.0
 zip
 p7zip
-wicd-gtk
+network-manager-applet
 python-pip
 python-virtualenv
 python-isort
