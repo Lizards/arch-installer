@@ -43,6 +43,7 @@ bash-completion
 smbclient
 gvfs-smb
 docker
+docker-buildx
 archey3
 i3-wm
 i3lock
@@ -91,7 +92,6 @@ youtube-dl
 byzanz
 openvpn
 code
-jupyter-notebook
 trash-cli
 virtualbox
 virtualbox-host-modules-arch
