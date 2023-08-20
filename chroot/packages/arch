@@ -24,10 +24,8 @@ python-pip
 python-virtualenv
 python-isort
 python-black
-python2
 ipython
-ipython2
-mysql-python
+python-mysql-connector
 libmemcached
 lsof
 strace
@@ -81,7 +79,6 @@ ttf-croscore
 ttf-ubuntu-font-family
 adobe-source-han-sans-kr-fonts
 wqy-zenhei
-arc-icon-theme
 keepass
 enchant
 hunspell
@@ -93,6 +90,9 @@ byzanz
 openvpn
 code
 trash-cli
+kbfs
+keybase
+keybase-gui
 virtualbox
 virtualbox-host-modules-arch
 virtualbox-guest-iso
