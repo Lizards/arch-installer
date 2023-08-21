@@ -14,7 +14,6 @@ chromium-widevine
 xdg-open-server
 virtualbox-ext-oracle
 grpcurl-bin
-python36
 aws-iam-authenticator-bin
 kubernetes-bin
 kubernetes-helm-bin
