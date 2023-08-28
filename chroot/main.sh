@@ -113,7 +113,7 @@ setup_user() {
     usermod --password "${ROOT_PASS}" root
 
     # Allow wheel group to sudo
-    sed -i 's/# \(%wheel ALL=(ALL) ALL\)/\1/' /etc/sudoers
+    sed -i 's/# \(%wheel ALL=(ALL:ALL) ALL\)/\1/' /etc/sudoers
 
     # Create user
     echo "Creating user ${USERNAME}"
