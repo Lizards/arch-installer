@@ -42,7 +42,7 @@ function run_chroot() {
     local CHROOT_SCRIPT_DIR=${1}
 
     mkdir -p "/mnt${CHROOT_SCRIPT_DIR}"
-    mv chroot/* "/mnt${CHROOT_SCRIPT_DIR}"
+    cp -R chroot/* "/mnt${CHROOT_SCRIPT_DIR}"
     cp .config "/mnt${CHROOT_SCRIPT_DIR}"
     cp pause.sh "/mnt${CHROOT_SCRIPT_DIR}"
 
