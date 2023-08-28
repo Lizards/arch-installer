@@ -36,7 +36,7 @@ function main() {
         sudo -u "${USERNAME}" git clone https://aur.archlinux.org/aurutils.git .
         sudo -u "${USERNAME}" makepkg --syncdeps --noconfirm --needed
         local AURUTILS_PKG
-        AURUTILS_PKG=$(ls aurutils*.pkg.tar.xz)
+        AURUTILS_PKG=$(ls aurutils*.pkg.tar.zst)
         sudo -u "${USERNAME}" mv "${AURUTILS_PKG}" "${REPO_DIR}"
         sudo -u "${USERNAME}" repo-add --new "${REPO_DB}" "${REPO_DIR}/${AURUTILS_PKG}"
     popd
