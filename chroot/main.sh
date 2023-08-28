@@ -82,7 +82,7 @@ function install_bluetooth() {
 function configure_virtualbox_guest() {
     echo
     echo "VirtualBox detected"
-    pacman -Syu --noconfirm virtualbox-guest-utils virtualbox-guest-modules-arch
+    pacman -Syu --noconfirm virtualbox-guest-utils
     systemctl enable vboxservice.service
 }
 
