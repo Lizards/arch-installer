@@ -13,7 +13,7 @@ function setup_partitions() {
 
     echo "Mounting boot partition from ${BOOT_PART}"
     mkdir -p /mnt/boot
-    mount "${BOOT_PART}" /mnt/boot
+    mount "${BOOT_PART}" /mnt/boot -o fmask=0077,dmask=0077
 
     if [ -n "${SWAP_PART}" ]; then
         echo "Enabling swap partition at ${SWAP_PART}"
