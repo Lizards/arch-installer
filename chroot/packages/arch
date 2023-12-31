@@ -32,6 +32,7 @@ i3-wm
 i3lock
 lxappearance
 lxdm-gtk3
+mesa-amber
 rofi
 trash-cli
 xdg-utils
