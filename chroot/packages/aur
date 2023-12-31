@@ -1,25 +1,28 @@
-xcalib
-ttf-font-awesome-4
-ttf-ms-fonts
-ttf-mplus
-ttf-symbola
-tamsyn-font
-doctoc
-lerna
-wrk
-geteltorito
+# ### applications ###
 c-lolcat
-dropbox
-nautilus-dropbox
 chromium-widevine
+dropbox
+# geteltorito
 xdg-open-server
-virtualbox-ext-oracle
-grpcurl-bin
-aws-iam-authenticator-bin
-kubernetes-bin
-kubernetes-helm-bin
-kops-bin
+### window manager & appearance ###
+nautilus-dropbox
 polybar
-signal-desktop-bin
-charles-bin
-themix-full-git
+xcalib
+# ### development ###
+# aws-iam-authenticator-bin
+# charles-bin
+# doctoc
+# grpcurl-bin
+# kops-bin
+# lerna
+# wrk
+### theming ###
+# themix-full-git
+# ### fonts ###
+tamsyn-font
+ttf-font-awesome-4
+ttf-mplus
+ttf-ms-fonts
+ttf-symbola
+# ### virtualbox ###
+virtualbox-ext-oracle

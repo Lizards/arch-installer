@@ -33,11 +33,8 @@ function install_packages() {
 
     # Install the list of packages first, rather than together with the AUR packages after aursync,
     # as some may be dependencies for compiling the AUR packages
-    readarray -t packages < "${CHROOT_SCRIPT_DIR}/packages/arch"
+    readarray -t packages < <(grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/packages/arch")
     pacman -Syu --noconfirm --needed "${packages[@]}"
-
-    # Jupyter Notebook: https://wiki.archlinux.org/index.php/Jupyter#Installation
-    jupyter nbextension enable --py --sys-prefix widgetsnbextension || true
 
     # Import GPG keys for AUR packages
     grep -v '^ *#' < "${CHROOT_SCRIPT_DIR}/packages/gpg-keys" | while IFS= read -r key
@@ -84,6 +81,7 @@ function configure_virtualbox_guest() {
     echo "VirtualBox detected"
     pacman -Syu --noconfirm virtualbox-guest-utils
     systemctl enable vboxservice.service
+    export DISPLAY=:0
 }
 
 
