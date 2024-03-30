@@ -90,6 +90,7 @@ hunspell
 hunspell-en_US
 smbclient
 gvfs-smb
+vlc
 ### other cli applications ###
 bash-completion
 powertop
