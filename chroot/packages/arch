@@ -15,6 +15,7 @@ sysfsutils
 curl
 git
 hexedit
+hwinfo
 jq
 lsof
 p7zip
