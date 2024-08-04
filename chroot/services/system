@@ -3,3 +3,4 @@ fstrim.timer
 NetworkManager.service
 lxdm.service
 docker.service
+bluetooth.service

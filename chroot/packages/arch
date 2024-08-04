@@ -33,9 +33,11 @@ i3-wm
 i3lock
 lxappearance
 lxdm-gtk3
-mesa-amber
+mesa
+polybar
 rofi
 trash-cli
+xcalib
 xdg-utils
 xorg-xauth
 xorg-xev
@@ -44,18 +46,19 @@ xorg-xprop
 xorg-xrandr
 xorg-xrdb
 ### sound ###
-alsa-lib
 alsa-utils
-pavucontrol
-pulseaudio
-pulseaudio-alsa
+pipewire-alsa
+pipewire-pulse
+wireplumber
 ### network ###
 dnsutils
-netcat
+gnu-netcat
 netctl
 network-manager-applet
 openvpn
 wireless_tools
+### bluetooth ###
+blueman
 ### usb ###
 udiskie
 usbutils
@@ -80,12 +83,8 @@ chromium
 firefox-developer-edition
 keepassxc
 signal-desktop
-kbfs
-keybase
-keybase-gui
 feh
 maim
-youtube-dl
 enchant
 hunspell
 hunspell-en_US

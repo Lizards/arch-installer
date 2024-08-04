@@ -1,3 +1,4 @@
 dropbox.service
 dunst.service
-keybase.service
+pipewire-session-manager.service
+pipewire-pulse.service
