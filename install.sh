@@ -2,7 +2,7 @@
 # shellcheck source=/dev/null
 
 
-function setup_partitions() {
+function mount_partitions() {
     local BOOT_PART=${1}
     local ROOT_PART=${2}
     local SWAP_PART=${3}
@@ -12,12 +12,11 @@ function setup_partitions() {
     mount "${ROOT_PART}" /mnt
 
     echo "Mounting boot partition from ${BOOT_PART}"
-    mkdir -p /mnt/boot
-    mount "${BOOT_PART}" /mnt/boot -o fmask=0077,dmask=0077
+    mount --mkdir "${BOOT_PART}" /mnt/boot
 
     if [ -n "${SWAP_PART}" ]; then
         echo "Enabling swap partition at ${SWAP_PART}"
-        swapon --discard "${SWAP_PART}"
+        swapon "${SWAP_PART}"
     fi
 
     if [ -n "${HOME_PART}" ]; then
@@ -53,7 +52,7 @@ function run_chroot() {
 
 
 configure_wlan() {
-    # Assumes WPA, one wireless interface, and one ethernet interface.
+    # Assumes WPA and one wireless interface.
     # Set `WLAN_INTERFACE` in .config if this doesn't work.
     local WLAN_SSID=${1}
     local WLAN_PASS=${2}
@@ -66,7 +65,6 @@ configure_wlan() {
     wpa_passphrase "${WLAN_SSID}" "${WLAN_PASS}" > wpa_supplicant.conf
     wpa_supplicant -B -i "${WLAN_INTERFACE}" -c wpa_supplicant.conf
     ip link set "${WLAN_INTERFACE}" up
-    dhcpcd "${WLAN_INTERFACE}"
 }
 
 
@@ -80,8 +78,6 @@ function main() {
     source .config
     source pause.sh
 
-    setfont sun12x22
-
     if [ "${WLAN_INSTALL:-0}" == "1" ]; then
         if [ -z "${WLAN_SSID}" ] || [ -z "${WLAN_PASS}" ]; then
             # shellcheck disable=SC2016
@@ -92,12 +88,12 @@ function main() {
         pause
     fi
 
-    setup_partitions "${BOOT_PART}" "${ROOT_PART}" "${SWAP_PART}" "${HOME_PART}"
+    mount_partitions "${BOOT_PART}" "${ROOT_PART}" "${SWAP_PART}" "${HOME_PART}"
     pause
     setup_mirrorlist "${COUNTRY:-United States}"
     pause
 
-    pacstrap /mnt base base-devel linux linux-firmware
+    pacstrap -K /mnt base base-devel linux linux-firmware
     pause
 
     echo "Generating /etc/fstab..."

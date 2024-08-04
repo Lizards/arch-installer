@@ -11,7 +11,7 @@ Personal scripts for bootstrapping an Arch Linux system with i3.
 - Optionally, installs the long-term support kernel
 - Detects CPU manufacturer and installs microcode package
 - Detects a VirtualBox environment, installs the guest libraries and enables `vboxservice.service`
-- Optionally, installs my [dotfiles](https://github.com/Lizards/dotfiles) (e.g. `.Xresources`, i3 config, bash aliases) and [system-specific configuration files](https://github.com/Lizards/arch-system-config) (e.g. mouse/trackpad settings, pacman hooks, bluetooth audio config)
+- Optionally, installs my [dotfiles](https://github.com/Lizards/dotfiles) (e.g. `.Xresources`, i3 config, bash aliases) and [system-specific configuration files](https://github.com/Lizards/arch-system-config) (e.g. mouse/trackpad settings, pacman hooks)
 - Optionally, performs the installation over wireless (assumes WPA)
 
 
@@ -43,7 +43,6 @@ Personal scripts for bootstrapping an Arch Linux system with i3.
     | `HOSTNAME`               | Computer's hostname, also used to install machine-specific system configs<br/><br/>With `INSTALL_DOTFILES=1`, accepted values are `radomir`, `boris` (ThinkPad X1 Carbons), or `mikhail` (a desktop PC with dual monitors).  If `HOSTNAME` matches none of these, a generic system config base package and `mikhail`'s dotfiles will be installed.  If installing in VirtualBox, a branch of the dotfiles specific to VirtualBox will be installed. | :black_circle: |
     | `INSTALL_PACKAGES`       | Default: `1`<br/><br/>With `1`, install the packages in [`chroot/packages/arch`](chroot/packages/arch), import GPG keys from [`chroot/packages/gpg-keys`](chroot/packages/gpg-keys) then [`chroot/packages/aur`](chroot/packages/aur), enable the services in [`chroot/services/system`](chroot/services/system) and [`chroot/services/user`](chroot/services/user), and add the `USERNAME` user to the groups in [`chroot/packages/groups`](chroot/packages/groups).  Edit these files and opt out of installing the dotfiles to install an alternative Desktop Environment.                  |                |
     | `INSTALL_DOTFILES`       | Default: `1`<br/><br/>With `1`, install [system configs](https://github.com/Lizards/arch-system-config) and [dotfiles](https://github.com/Lizards/dotfiles).  See `HOSTNAME` below. Set to `0` to disable.  Dotfiles will not be installed with `INSTALL_PACKAGES=0`.                             |                |
-    | `INSTALL_BLUETOOTH`      | Default: `1`<br/><br/>With `1`, install and configure [Bluetooth for PulseAudio](https://github.com/Lizards/arch-bluetooth-pulseaudio) |                |
     | `INSTALL_LTS_KERNEL`     | Default: `0`<br/><br/>With `1`, install the long-term support kernel and make its bootloader entry the default |                |
     | `TIMEZONE`               | Default: `US/Eastern` |                |
     | `COUNTRY`                | Default: `United States`<br/><br/>Used with `reflector` to generate pacman mirror list |                |
@@ -65,7 +64,7 @@ Personal scripts for bootstrapping an Arch Linux system with i3.
 
 ## Wait, not done yet
 
-- __Networking requires setup__: `NetworkManager` service should be running, but network connectivity will not work without configuration.  Use `ip link` to list interfaces.
+- __Networking requires setup__: `NetworkManager` service should be running, but network connectivity will not work without configuration.  Use `ip link` to list interfaces and `nm-connection-editor` to configure.
 
 - __If screen resolution is wrong__, use `arandr` to change it.  Export an `xrandr` command from `arandr`.  If dotfiles were installed, update `$HOME/dotfiles/bin/xrandr.local` with it, then run `make` in `$HOME/dotfiles` to fix permanently.  If not, put it in the i3 config as an `exec_always` command.
 
@@ -77,7 +76,7 @@ Personal scripts for bootstrapping an Arch Linux system with i3.
 
 - __If Polybar doesn't appear__, run `polybar.local` to inspect errors.  A common culprit is the `monitor` value in the bar definitions in `$HOME/dotfiles/.config/polybar/config`.  Run `polybar -m` to find active display names.
 
-- __If network status is missing from Polybar__, update the `eth` and `wlan` modules in `$HOME/dotfiles/.config/polybar/config` with the correct interface names.  This can be done with `POLYBAR_ETH_INTERFACE` and `POLYBAR_WLAN_INTERFACE` environment variables (look in `.xprofile`).
+- __If network status is missing from Polybar__, update the `eth` and `wlan` modules in `$HOME/dotfiles/.config/polybar/config` with the correct interface names.  This can be done with `POLYBAR_ETH_INTERFACE` and `POLYBAR_WLAN_INTERFACE` environment variables in `.xprofile`.
 
 - __If using a Mac__, i3 keyboard controls probably won't work as configured, which means you can't do *anything* in i3. You must drop to a shell (`Fn+Ctrl+Opt+F2`?) to do anything further. Edit `$HOME/.config/i3/config`, adding the line `bindsym Shift+Return exec i3-sensible-terminal` to temporarily enable `Shift+Enter` to open a terminal in i3, reboot, and...
 	- Use `i3-config-wizard` to generate a new config, then replace the key bindings in the existing config with the newly generated ones, __or__
