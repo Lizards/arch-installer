@@ -2,30 +2,31 @@
 
 
 function main() {
-    local REPO_DIR='/var/cache/pacman/custom'
-    local REPO_DB="${REPO_DIR}/custom.db.tar"
     local USERNAME=${1}
+    local REPO_NAME=${2:-custom}
+    local REPO_DIR="/var/cache/pacman/${REPO_NAME}"
+    local REPO_DB="${REPO_DIR}/${REPO_NAME}.db.tar"
 
     # Install git and optional dependencies
-    pacman -Syu --noconfirm --needed git bash-completion vifm
+    pacman -Syu --noconfirm --needed git bash-completion vifm perl-json-xs
 
     # pacman local repo and aurutils
     # please note tabs in the here-doc to support indentation - https://unix.stackexchange.com/questions/76481/cant-indent-heredoc-to-match-nestings-indent
-    cat > /etc/pacman.d/custom <<- EOF
+    cat > "/etc/pacman.d/${REPO_NAME}" <<- EOF
 		[options]
 		CacheDir = /var/cache/pacman/pkg
-		CacheDir = /var/cache/pacman/custom
+		CacheDir = ${REPO_DIR}
 		CleanMethod = KeepCurrent
 
-		[custom]
+		[${REPO_NAME}]
 		SigLevel = Optional TrustAll
-		Server = file:///var/cache/pacman/custom
+		Server = file://${REPO_DIR}
 	EOF
-    echo 'Include = /etc/pacman.d/custom' | tee -a /etc/pacman.conf
+    echo "Include = /etc/pacman.d/${REPO_NAME}" | tee -a /etc/pacman.conf
     sed -i 's/#Color/Color/' /etc/pacman.conf
     install -d "${REPO_DIR}" -o "${USERNAME}"
     sudo -u "${USERNAME}" repo-add "${REPO_DB}"
-    pacman -Syy
+    # pacman -Syy
 
     # run makepkg as user
     local AURUTILS_BUILD_DIR='/tmp/aurutils'

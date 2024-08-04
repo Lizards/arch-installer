@@ -6,16 +6,9 @@ dropbox
 xdg-open-server
 ### window manager & appearance ###
 nautilus-dropbox
-polybar
-xcalib
 # ### development ###
-# aws-iam-authenticator-bin
-# charles-bin
-# doctoc
-# grpcurl-bin
-# kops-bin
-# lerna
-# wrk
+grpcurl-bin
+kops-bin
 ### theming ###
 # themix-full-git
 # ### fonts ###
