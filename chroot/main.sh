@@ -20,7 +20,8 @@ function configure_localtime() {
 function configure_hostname() {
     local HOSTNAME=${1}
     echo "${HOSTNAME}" > /etc/hostname
-    sed -i "8i 127.0.1.1\\t$HOSTNAME.localdomain\\t$HOSTNAME" /etc/hosts
+    echo -e "127.0.0.1\tlocalhost" >> /etc/hosts
+    echo -e "127.0.1.1\t${HOSTNAME}" >> /etc/hosts
 }
 
 
