@@ -7,7 +7,7 @@ function generate_bootloader_entry {
     local CHIPSET=${2}
     local PARTUUID=${3}
     local KERNEL_NAME=${4:-linux}
-    read -r -d '' DOC <<- EOF
+    read -r -d '' DOC <<- EOF || true  # https://unix.stackexchange.com/a/265151
 		title   ${BOOTLOADER_TITLE}
 		linux   /vmlinuz-${KERNEL_NAME}
 		initrd  /${CHIPSET}-ucode.img
