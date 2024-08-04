@@ -33,7 +33,7 @@ function main() {
         [GenuineIntel]=intel
         [AuthenticAMD]=amd
     )
-    local CHIPSET=${CHIPSETS["$(lscpu | grep Vendor | awk -F ': +' '{print $2}')"]}
+    local CHIPSET=${CHIPSETS["$(lscpu | grep '^Vendor ID:' | awk -F ': +' '{print $2}')"]}
     source "${CHROOT_SCRIPT_DIR}/pause.sh"
 
     # Install microcode
