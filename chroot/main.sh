@@ -65,17 +65,6 @@ function install_packages() {
 }
 
 
-function install_bluetooth() {
-    local HOSTNAME=${1}
-    sudo -u "${USERNAME}" mkdir /tmp/arch-bluetooth-pulseaudio
-    pushd /tmp/arch-bluetooth-pulseaudio
-        sudo -u "${USERNAME}" curl -L https://github.com/Lizards/arch-bluetooth-pulseaudio/tarball/master | tar -xvz --strip-component=1
-        sudo -u "${USERNAME}" aur build -d custom -- --clean --syncdeps --noconfirm --needed
-        pacman -Syu --noconfirm arch-bluetooth-pulseaudio
-    popd
-}
-
-
 function configure_virtualbox_guest() {
     echo
     echo "VirtualBox detected"
@@ -160,9 +149,6 @@ function main() {
         # install configs from `arch-system-config` repo, and install dotfiles from `dotfiles` repo
         install_packages "${HOSTNAME}" "${INSTALL_DOTFILES:-1}" "${CHROOT_SCRIPT_DIR}" "${USERNAME}" "${VIRTUALBOX}"
         pause
-    fi
-    if [ "${INSTALL_BLUETOOTH:-1}" == "1" ]; then
-        install_bluetooth "${USERNAME}"
     fi
 }
 
