@@ -102,6 +102,7 @@ setup_user() {
 
     # Allow wheel group to sudo
     sed -i 's/# \(%wheel ALL=(ALL:ALL) ALL\)/\1/' /etc/sudoers
+    echo "Defaults passwd_timeout=600" >> /etc/sudoers
 
     # Create user
     echo "Creating user ${USERNAME}"
@@ -135,6 +136,7 @@ function main() {
     pause
 
     # Install aurutils and configure local 'custom' database
+    sed -i 's/#Color/Color/' /etc/pacman.conf
     bash "${CHROOT_SCRIPT_DIR}/aurutils.sh" "${USERNAME}"
     pause
 
