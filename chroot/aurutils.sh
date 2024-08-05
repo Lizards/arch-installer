@@ -22,11 +22,7 @@ function main() {
 		SigLevel = Optional TrustAll
 		Server = file://${REPO_DIR}
 	EOF
-    echo "Include = /etc/pacman.d/${REPO_NAME}" | tee -a /etc/pacman.conf
-    sed -i 's/#Color/Color/' /etc/pacman.conf
     install -d "${REPO_DIR}" -o "${USERNAME}"
-    sudo -u "${USERNAME}" repo-add "${REPO_DB}"
-    # pacman -Syy
 
     # run makepkg as user
     local AURUTILS_BUILD_DIR='/tmp/aurutils'
@@ -39,9 +35,10 @@ function main() {
         local AURUTILS_PKG
         AURUTILS_PKG=$(ls aurutils*.pkg.tar.zst)
         sudo -u "${USERNAME}" mv "${AURUTILS_PKG}" "${REPO_DIR}"
-        sudo -u "${USERNAME}" repo-add --new "${REPO_DB}" "${REPO_DIR}/${AURUTILS_PKG}"
     popd
 
+    echo "Include = /etc/pacman.d/${REPO_NAME}" | tee -a /etc/pacman.conf
+    sudo -u "${USERNAME}" repo-add --new "${REPO_DB}" "${REPO_DIR}/${AURUTILS_PKG}"
     pacman -Syu --noconfirm aurutils
 }
 
