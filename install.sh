@@ -31,7 +31,6 @@ function setup_mirrorlist() {
     local COUNTRY=${1}
 
     echo "Setting up mirrorlist"
-    pacman -Sy --noconfirm reflector
     reflector --country "${COUNTRY}" --protocol https --latest 10 --age 12 --sort rate --save /etc/pacman.d/mirrorlist
     cat /etc/pacman.d/mirrorlist
 }
@@ -51,23 +50,6 @@ function run_chroot() {
 }
 
 
-configure_wlan() {
-    # Assumes WPA and one wireless interface.
-    # Set `WLAN_INTERFACE` in .config if this doesn't work.
-    local WLAN_SSID=${1}
-    local WLAN_PASS=${2}
-    local WLAN_INTERFACE=${3}
-
-    if [ "${WLAN_INTERFACE}" == "0" ]; then
-        WLAN_INTERFACE=$(iw dev | awk '$1=="Interface"{print $2}')
-    fi
-
-    wpa_passphrase "${WLAN_SSID}" "${WLAN_PASS}" > wpa_supplicant.conf
-    wpa_supplicant -B -i "${WLAN_INTERFACE}" -c wpa_supplicant.conf
-    ip link set "${WLAN_INTERFACE}" up
-}
-
-
 function cleanup() {
     umount -R /mnt
     reboot
@@ -78,22 +60,12 @@ function main() {
     source .config
     source pause.sh
 
-    if [ "${WLAN_INSTALL:-0}" == "1" ]; then
-        if [ -z "${WLAN_SSID}" ] || [ -z "${WLAN_PASS}" ]; then
-            # shellcheck disable=SC2016
-            echo 'ERROR: Configure variables `WLAN_SSID` and `WLAN_PASS` to install over wifi'
-            exit 1
-        fi
-        configure_wlan "${WLAN_SSID}" "${WLAN_PASS}" "${WLAN_INTERFACE:-0}"
-        pause
-    fi
-
     mount_partitions "${BOOT_PART}" "${ROOT_PART}" "${SWAP_PART}" "${HOME_PART}"
     pause
     setup_mirrorlist "${COUNTRY:-United States}"
     pause
 
-    pacstrap -K /mnt base base-devel linux linux-firmware
+    pacstrap -K /mnt base base-devel linux linux-firmware vim iwd
     pause
 
     echo "Generating /etc/fstab..."

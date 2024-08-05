@@ -21,7 +21,7 @@ Personal scripts for bootstrapping an Arch Linux system with i3.
 
 1. [Prepare the partitions](https://wiki.archlinux.org/index.php/Installation_guide#Partition_the_disks) ([Cheat sheet](PARTITIONS.md))
 
-1. Make sure the internet is available
+1. Make sure the internet is available. `ip link` --> `iwctl station <WLAN> connect <network SSID>`
 
 1. Download and extract the project:
     ```console
@@ -48,10 +48,6 @@ Personal scripts for bootstrapping an Arch Linux system with i3.
     | `COUNTRY`                | Default: `United States`<br/><br/>Used with `reflector` to generate pacman mirror list |                |
     | `PAUSE_BETWEEN_STEPS`    | For debugging, set to `1` to pause and wait for keyboard input between steps |                |
     | `CHROOT_SCRIPT_DIR`      | Default: `/usr/local/lib/bootstrap`<br/><br/>Directory where the install scripts are copied during `chroot` step, deleted on successful installation |                |
-    | `WLAN_INSTALL`           | Default: `0`<br/><br/>Set to `1` to enable installation over wireless.  Wireless installation assumes WPA.  Manually enable wireless per the Arch Wiki if unsure. |                |
-    | `WLAN_SSID`              | Wireless network SSID.  Required with `WLAN_INSTALL=1` |                |
-    | `WLAN_PASS`              | Wireless network password.  Required with `WLAN_INSTALL=1` |                |
-    | `WLAN_INTERFACE`         | With `WLAN_INSTALL=1`, script will attempt to discover the wireless interface name, but assumes there's only one.  Set this variable to explicitly declare the interface name. |                |
 
 1. Run the install script:
     ```console
