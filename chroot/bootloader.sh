@@ -8,8 +8,8 @@ function generate_bootloader_entry {
     local KERNEL_NAME=${3:-linux}
     read -r -d '' DOC <<- EOF || true  # https://unix.stackexchange.com/a/265151
 		title   ${BOOTLOADER_TITLE}
-		linux   /vmlinuz-${KERNEL_NAME}
-		initrd  /initramfs-${KERNEL_NAME}.img
+		linux   /sandbox/vmlinuz-${KERNEL_NAME}
+		initrd  /sandbox/initramfs-${KERNEL_NAME}.img
 		options root=PARTUUID=${PARTUUID} rw ipv6.disable=1
 	EOF
     echo "${DOC}"
@@ -20,7 +20,7 @@ function main() {
     local ROOT_PART=${1}
     local INSTALL_LTS_KERNEL=${2}
     # Bootloader titles, use LTS as default if installed
-    local BOOTLOADER_TITLE_DEFAULT="Arch"
+    local BOOTLOADER_TITLE_DEFAULT="Arch Sandbox"
     local BOOTLOADER_TITLE_LTS="Arch - LTS Kernel"
     local BOOTLOADER_DEFAULT="${BOOTLOADER_TITLE_DEFAULT}" && [[ "${INSTALL_LTS_KERNEL}" == "1" ]] && BOOTLOADER_DEFAULT="${BOOTLOADER_TITLE_LTS}"
     # Get PARTUUID for bootloader entry files

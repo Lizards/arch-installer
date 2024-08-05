@@ -65,6 +65,9 @@ function main() {
     setup_mirrorlist "${COUNTRY:-United States}"
     pause
 
+    mkdir -p /mnt/etc/mkinitcpio.d/
+    cp linux.preset /mnt/etc/mkinitcpio.d/
+
     pacstrap -K /mnt base base-devel linux linux-firmware vim iwd
     pause
 

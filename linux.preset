@@ -1,0 +1,10 @@
+# mkinitcpio preset file for the 'linux' package
+
+ALL_kver="/boot/sandbox/vmlinuz-linux"
+
+PRESETS=('default' 'fallback')
+
+default_image="/boot/sandbox/initramfs-linux.img"
+
+fallback_image="/boot/sandbox/initramfs-linux-fallback.img"
+fallback_options="-S autodetect"
