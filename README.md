@@ -1,3 +1,4 @@
+- Detects CPU manufacturer and installs microcode package
 # Arch Installation Scripts
 
 Personal scripts for bootstrapping an Arch Linux system with i3.
@@ -9,7 +10,6 @@ Personal scripts for bootstrapping an Arch Linux system with i3.
 - Optionally, installs packages listed in [`chroot/packages`](chroot/packages)
 - Optionally, enables services listed in [`chroot/services`](chroot/services)
 - Optionally, installs the long-term support kernel
-- Detects CPU manufacturer and installs microcode package
 - Detects a VirtualBox environment, installs the guest libraries and enables `vboxservice.service`
 - Optionally, installs my [dotfiles](https://github.com/Lizards/dotfiles) (e.g. `.Xresources`, i3 config, bash aliases) and [system-specific configuration files](https://github.com/Lizards/arch-system-config) (e.g. mouse/trackpad settings, pacman hooks)
 - Optionally, performs the installation over wireless (assumes WPA)
