@@ -133,10 +133,12 @@ function main() {
     pause
 
     setup_user "${USERNAME}" "${PASS}" "${USER_GROUPS:-wheel,optical,audio,video,lp}" "${ROOT_PASS}"
+
+    # TEMPORARY for installation: allow user to run sudo without password
+    echo "${USERNAME} ALL=NOPASSWD: ALL" > /etc/sudoers.d/01-installer-pacman
     pause
 
     # Install aurutils and configure local 'custom' database
-    sed -i 's/#Color/Color/' /etc/pacman.conf
     bash "${CHROOT_SCRIPT_DIR}/aurutils.sh" "${USERNAME}"
     pause
 
@@ -153,6 +155,9 @@ function main() {
         install_packages "${HOSTNAME}" "${INSTALL_DOTFILES:-1}" "${CHROOT_SCRIPT_DIR}" "${USERNAME}" "${VIRTUALBOX}"
         pause
     fi
+
+    # Cleanup: Remove ability to sudo without password
+    rm /etc/sudoers.d/01-installer-pacman
 }
 
 
