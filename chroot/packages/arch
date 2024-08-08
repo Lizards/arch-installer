@@ -68,6 +68,7 @@ kubectl
 npm
 ipython
 python-black
+python-gpgme
 python-isort
 python-mysql-connector
 python-pip
