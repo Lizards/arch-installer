@@ -65,8 +65,6 @@ usbutils
 ### development ###
 code
 kubectl
-helm
-nodejs
 npm
 ipython
 python-black
