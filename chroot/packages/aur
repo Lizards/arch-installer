@@ -9,6 +9,7 @@ nautilus-dropbox
 # ### development ###
 grpcurl-bin
 kops-bin
+code-features
 ### theming ###
 # themix-full-git
 # ### fonts ###
