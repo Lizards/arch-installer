@@ -60,17 +60,17 @@ Personal scripts for bootstrapping an Arch Linux system with i3.
 
 - __Networking requires setup__: `NetworkManager` service should be running, but network connectivity will not work without configuration.  Use `ip link` to list interfaces and `nm-connection-editor` to configure.
 
-- __If screen resolution is wrong__, use `arandr` to change it.  Export an `xrandr` command from `arandr`.  If dotfiles were installed, update `$HOME/dotfiles/bin/xrandr.local` with it, then run `make` in `$HOME/dotfiles` to fix permanently.  If not, put it in the i3 config as an `exec_always` command.
+- __If screen resolution is wrong__, use `arandr` to change it.  Export an `xrandr` command from `arandr`.  If dotfiles were installed, update `$HOME/dotfiles/bin/xrandr.local` with the new command.  If not, put it in the i3 config as an `exec_always` command.
 
 - __If dotfiles were not installed__, there is no Polybar and the default `i3bar` display is broken.
     - Install `i3status` then `Win+Shift+R` to fix the `i3bar` display, __or__
-	- Launch Polybar with its default config with `polybar -c /usr/share/doc/polybar/config example > /dev/null 2>&1 &`
+	- Launch Polybar with its default config with `polybar -c /usr/share/doc/polybar/examples/config.ini example > /dev/null 2>&1 &`
 
 ### If dotfiles were installed...
 
-- __If Polybar doesn't appear__, run `polybar.local` to inspect errors.  A common culprit is the `monitor` value in the bar definitions in `$HOME/dotfiles/.config/polybar/config`.  Run `polybar -m` to find active display names.
+- __If Polybar doesn't appear__, run `polybar.local` to inspect errors.  A common culprit is the `monitor` value in the bar definitions in `$HOME/dotfiles/.config/polybar/config.ini`.  Run `polybar -m` to find active display names.  The variables read by the Polybar config are defined in `$HOME/dotfiles/.profile`.
 
-- __If network status is missing from Polybar__, update the `eth` and `wlan` modules in `$HOME/dotfiles/.config/polybar/config` with the correct interface names.  This can be done with `POLYBAR_ETH_INTERFACE` and `POLYBAR_WLAN_INTERFACE` environment variables in `.xprofile`.
+- __If network status is missing from Polybar__, update the `eth` and `wlan` modules in `$HOME/dotfiles/.config/polybar/config.ini` with the correct interface names.  This can be done with `POLYBAR_ETH_INTERFACE` and `POLYBAR_WLAN_INTERFACE` environment variables in `.xprofile`.
 
 - __If using a Mac__, i3 keyboard controls probably won't work as configured, which means you can't do *anything* in i3. You must drop to a shell (`Fn+Ctrl+Opt+F2`?) to do anything further. Edit `$HOME/.config/i3/config`, adding the line `bindsym Shift+Return exec i3-sensible-terminal` to temporarily enable `Shift+Enter` to open a terminal in i3, reboot, and...
 	- Use `i3-config-wizard` to generate a new config, then replace the key bindings in the existing config with the newly generated ones, __or__
