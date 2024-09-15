@@ -26,6 +26,7 @@ zip
 ### containers ###
 docker
 docker-buildx
+docker-compose
 ### window manager & appearance ###
 arandr
 dunst
