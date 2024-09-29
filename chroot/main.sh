@@ -28,9 +28,10 @@ function configure_hostname() {
 function install_packages() {
     local HOSTNAME=${1}
     local INSTALL_DOTFILES=${2}
-    local CHROOT_SCRIPT_DIR=${3}
-    local USERNAME=${4}
-    local VIRTUALBOX=${5}
+    local INSTALL_IPTABLES=${3}
+    local CHROOT_SCRIPT_DIR=${4}
+    local USERNAME=${5}
+    local VIRTUALBOX=${6}
 
     # Install the list of packages first, rather than together with the AUR packages after aursync,
     # as some may be dependencies for compiling the AUR packages
@@ -49,6 +50,12 @@ function install_packages() {
         # Packages compiled from source aren't automatically installed through `aur sync` (this impacts Polybar)
         if ! pacman -Qs "${package}" > /dev/null ; then pacman -Syu --noconfirm "${package}"; fi
     done
+
+    if [ "${INSTALL_IPTABLES}" == "1" ]; then
+        iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+        iptables-save -f /etc/iptables/iptables.rules
+        systemctl enable iptables.service
+    fi
 
     if [ "${INSTALL_DOTFILES}" == "1" ]; then
         # Install dotfiles and configs from `arch-system-config` repo (package named after hostname)
@@ -152,7 +159,7 @@ function main() {
         # install all packages, start services,
         # add user to groups provided by packages,
         # install configs from `arch-system-config` repo, and install dotfiles from `dotfiles` repo
-        install_packages "${HOSTNAME}" "${INSTALL_DOTFILES:-1}" "${CHROOT_SCRIPT_DIR}" "${USERNAME}" "${VIRTUALBOX}"
+        install_packages "${HOSTNAME}" "${INSTALL_DOTFILES:-1}" "${INSTALL_IPTABLES:-1}" "${CHROOT_SCRIPT_DIR}" "${USERNAME}" "${VIRTUALBOX}"
         pause
     fi
 
