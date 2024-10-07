@@ -25,7 +25,6 @@ function main() {
         pushd dotfiles
             echo
             echo "Installing dotfiles..."
-            sudo -u "${USERNAME}" git checkout "${HOSTNAME}" || echo "No branch matching hostname ${HOSTNAME}; using master"
             sudo -u "${USERNAME}" make
         popd
     popd
